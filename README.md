@@ -1,40 +1,81 @@
-# Westward
+# Trail West
 
-A small, modern successor to *The Oregon Trail*, inspired by the original 1979 BASIC source.
+A wagon-journey game built in React + Vite. The **mechanics** are a clean-room port of
+the public-domain 1978 *OREGON* source (published by Don Rawitsch in *Creative Computing*,
+1978; MIT-licensed reconstruction at
+[LiquidFox1776/oregon-trail-1978-basic](https://github.com/LiquidFox1776/oregon-trail-1978-basic)).
 
-The classic loop — outfit your party, then survive a series of turns where you manage
-supplies, weather, illness, and random events on the journey west — reimagined as a fun
-personal project built with **React + Vite**.
+> **On the name and assets:** "The Oregon Trail" is a live registered trademark (HMH / News Corp).
+> This project deliberately uses only the *uncopyrightable* parts — game mechanics and real
+> public-domain geography — under a different name, with original art and writing. Don't ship it
+> using the trademark or any MECC/Apple II assets.
 
-## Status
-
-🚧 Just getting started. Repo scaffolded; game code to follow.
-
-## Tech stack
-
-- **React** (UI)
-- **Vite** (dev server + build)
-- Scene art generated with **NovelAI**
-
-## Inspiration
-
-Based on the 1979 version of *Oregon Trail* (originally written in BASIC by Don Rawitsch,
-Bill Heinemann, and Paul Dillenberger). This is a fresh reimagining, not a port.
-
-## Art
-
-Scene art is generated with NovelAI. The original game's art is **copyrighted** and is used
-**only as generation inspiration** — never copied into or shipped with this project. Any
-reference originals live in `assets/reference/`, which is git-ignored and stays local.
-
-Generated, shippable art lives under `src/assets/` (or `public/`).
-
-## Getting started
+## Run it
 
 ```bash
 npm install
-npm run dev
+npm run dev        # local dev server
+npm run build      # production build -> dist/
+npm run preview    # preview the production build
 ```
 
-_(Scaffolding pending — run `npm create vite@latest` to generate the app skeleton, or let me
-set it up.)_
+## Deploy
+
+`npm run build` emits a static `dist/`. Host it anywhere static:
+
+- **itch.io** — zip `dist/` and upload as an HTML5 project
+- **GitHub Pages** — push `dist/`, or use an action; if serving from a project subpath,
+  uncomment and set `base` in `vite.config.js`
+- **IONOS / your own space** — upload the contents of `dist/`
+
+## Save / resume
+
+Progress is saved to `localStorage` on every turn (key `trailwest.save.v1`). The outfitting
+screen shows a **Resume** button when a save exists. Reaching the end (win or death) clears it.
+Persistence is wrapped in try/catch so it degrades silently in sandboxed previews.
+
+## Structure
+
+```
+src/
+  main.jsx                 mount
+  App.jsx                  root UI + save/resume wiring + turn/action buttons
+  index.css                reset + reduced-motion
+  game/
+    engine.js              ALL game logic — constants, palette, events, illness,
+                           mountain passes, reducer, persistence (no React here)
+  components/
+    ui.jsx                 Stat, Btn, TrailBar
+    screens.jsx            Outfit, Fort, Hunt, River, Mountain, EndScreen
+```
+
+Everything stateful lives in `engine.js` as pure functions + one reducer, so logic changes
+never touch the components.
+
+## Tuning knobs (all in `game/engine.js`)
+
+- **Difficulty / pace** — the mileage formula in the `ADVANCE` case:
+  `200 + (oxen-220)/5 + rand(0..10)`. Raise the base or the oxen coefficient to make the trip easier.
+- **Event frequencies** — `rollEvent()` uses the exact d100 cutoffs from the 1978 source.
+  Each `if (r <= N)` band is that event's probability; reorder/reweight freely.
+- **Eating vs. illness** — `illnessRoll()`: poorly = 100% illness roll, moderately = 75%, well = 50%.
+- **Mountain passes** — `resolveMountain()` + the `blizzard` prob on the South Pass / Blue Mountains
+  landmarks. Clothing threshold scales with turn number (later = colder).
+- **Forts** — 2/3 value per dollar; **hunting** needs >39 bullets; both cost 45 miles.
+- **Winter deadline** — `afterTurnChecks()` kills the party at turn 20.
+
+## Enhancements beyond the original (yours to keep or cut)
+
+The mainframe original was pure mileage with no named stops. Added here:
+
+- **Landmark spine** (`LANDMARKS`) mapped along the 2040-mile trail using real trail geography.
+- **River-crossing decisions** at river landmarks (ford / caulk & float / ferry).
+- **Mountain-pass beats** at South Pass and the Blue Mountains (rugged terrain, cold-weather
+  clothing check, blizzard roll) — matched to the source's ~950 and ~1700 mile thresholds.
+
+## Ideas / next steps
+
+- Party members with individual health/names (the original tracked a family of five)
+- An illustrated map screen instead of the linear trail bar
+- Difficulty presets (banker / carpenter / farmer, like the classic profession choice)
+- Sound (Suno-generated period score would fit)

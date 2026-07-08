@@ -1,38 +1,5 @@
-# --- Node / Vite / React ---
-node_modules/
-dist/
-dist-ssr/
-*.local
-.vite/
-
-# Vite build / cache
-*.tsbuildinfo
-
-# Env / secrets
-.env
-.env.*
-!.env.example
-
-# Logs
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-# Editor / OS cruft
+node_modules
+dist
 .DS_Store
-Thumbs.db
-desktop.ini
-*.swp
-*~
-.idea/
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
-
-# --- Art pipeline ---
-# Reference art (copyrighted originals — used only as generation inspiration, never shipped)
-assets/reference/
-art-reference/
+*.local
+.vite
