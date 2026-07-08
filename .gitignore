@@ -1,0 +1,39 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+.idea/
+.vscode/*
+!.vscode/settings.json
+
+# Environment / secrets
+.env
+.env.local
+*.local
+
+# Logs & temp
+*.log
+tmp/
+temp/
+
+# --- Node / JS (if used) ---
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+.npm/
+
+# --- Python (if used) ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# --- Build artifacts / binaries ---
+*.exe
+*.o
+*.out
