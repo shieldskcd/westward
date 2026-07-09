@@ -17,7 +17,17 @@ npm install
 npm run dev        # local dev server
 npm run build      # production build -> dist/
 npm run preview    # preview the production build
+npm test           # headless engine smoke test (600 full games)
 ```
+
+## Testing
+
+`npm test` runs `test/smoke.mjs` — a dependency-free harness that plays hundreds of
+full games through the reducer (no React, no browser), exercising outfitting, the event
+table, forts, hunting, river crossings, mountain passes, illness, and every ending. It
+asserts no crashes and no broken invariants (resources never negative, mileage sane,
+every game terminates), and exits non-zero on failure. Bump the game count with
+`RUNS=5000 npm test`. Run it after any change to `game/engine.js`.
 
 ## Deploy
 
