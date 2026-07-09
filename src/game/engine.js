@@ -136,6 +136,13 @@ export function hasSave() {
   try { return !!window.localStorage.getItem(SAVE_KEY); } catch (_) { return false; }
 }
 
+// ---------- default outfit ----------
+// Single source of truth for the recommended starting outfit. The Outfit screen
+// seeds its inputs from this, and the balance test uses it as the REC profile —
+// so the shipped difficulty and the tested difficulty can never drift apart.
+// (Dollar allocations out of the $700 budget; ammo is dollars → bullets = ammo*50.)
+export const DEFAULT_OUTFIT = { oxen: 250, food: 280, ammo: 2, clothing: 40, misc: 30 };
+
 // ---------- reducer ----------
 export const START = { phase: "outfit", log: [], turn: 0, eat: 2, mile: 0 };
 

@@ -1,16 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
-import { C, serif, mono, GOAL } from "../game/engine.js";
+import { C, serif, mono, GOAL, DEFAULT_OUTFIT } from "../game/engine.js";
 import { Btn } from "./ui.jsx";
 
 const rowBottom = { borderBottom: `1px dashed ${C.line}` };
 const between = { display: "flex", alignItems: "center", justifyContent: "space-between" };
 
 export function Outfit({ dispatch }) {
-  const [oxen, setOxen] = useState(250);
-  const [food, setFood] = useState(200);
-  const [ammo, setAmmo] = useState(2);
-  const [clothing, setClothing] = useState(30);
-  const [misc, setMisc] = useState(30);
+  const [oxen, setOxen] = useState(DEFAULT_OUTFIT.oxen);
+  const [food, setFood] = useState(DEFAULT_OUTFIT.food);
+  const [ammo, setAmmo] = useState(DEFAULT_OUTFIT.ammo);
+  const [clothing, setClothing] = useState(DEFAULT_OUTFIT.clothing);
+  const [misc, setMisc] = useState(DEFAULT_OUTFIT.misc);
   const left = 700 - (oxen + food + ammo + clothing + misc);
   const oxenOk = oxen >= 200 && oxen <= 300;
   const ok = oxenOk && left >= 0;

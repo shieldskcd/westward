@@ -14,16 +14,16 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  reducer, START, GOAL, LANDMARKS, currentLandmarkIdx,
+  reducer, START, GOAL, LANDMARKS, currentLandmarkIdx, DEFAULT_OUTFIT,
 } from "../src/game/engine.js";
 
 // ---------------------------------------------------------------------------
-// Reference outfits. REC must mirror the suggested defaults in the Outfit
-// screen (src/components/screens.jsx). If you change the UI defaults, change
-// these too — or, cleaner, export a DEFAULT_OUTFIT constant from engine.js and
-// import it in both places so there's a single source of truth.
+// Reference outfits. REC is the single source of truth shared with the Outfit
+// screen (both import DEFAULT_OUTFIT from engine.js), so the shipped defaults
+// and the tested difficulty can't drift apart. LEAN is the old under-
+// provisioned default, kept as the "economy still bites" lower-bound profile.
 // ---------------------------------------------------------------------------
-const REC = { oxen: 250, food: 280, ammo: 2, clothing: 40, misc: 30 };   // recommended outfit
+const REC = DEFAULT_OUTFIT;                                              // recommended outfit (shipped default)
 const LEAN = { oxen: 250, food: 200, ammo: 2, clothing: 30, misc: 30 };  // under-provisioned (old default)
 
 // Player policies (how the profile plays each turn)
