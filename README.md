@@ -17,17 +17,24 @@ npm install
 npm run dev        # local dev server
 npm run build      # production build -> dist/
 npm run preview    # preview the production build
-npm test           # headless engine smoke test (600 full games)
+npm test           # headless engine regression + balance guardrails
 ```
 
 ## Testing
 
-`npm test` runs `test/smoke.mjs` — a dependency-free harness that plays hundreds of
-full games through the reducer (no React, no browser), exercising outfitting, the event
-table, forts, hunting, river crossings, mountain passes, illness, and every ending. It
-asserts no crashes and no broken invariants (resources never negative, mileage sane,
-every game terminates), and exits non-zero on failure. Bump the game count with
-`RUNS=5000 npm test`. Run it after any change to `game/engine.js`.
+`npm test` runs the built-in `node --test` runner over `test/` (zero dependencies).
+`test/balance.test.mjs` does two jobs by driving the reducer through thousands of
+headless games (no React, no browser):
+
+1. **Regression** — across mixed outfit/policy profiles, asserts no crash, no broken
+   invariant (resources never negative, mileage sane), and that every game terminates.
+2. **Balance** — asserts win rates for reference player profiles stay inside design
+   bands, so a future mechanic tweak that accidentally re-brutalizes *or* trivializes
+   the food economy fails the test instead of shipping. Current bands (observed):
+   recommended+passive ≈ 68%, recommended+active ≈ 75%, under-provisioned+passive ≈ 25%.
+
+Run it after any change to `game/engine.js`. If you change the Outfit screen defaults,
+update the `REC` / `LEAN` reference outfits at the top of the test to match.
 
 ## Deploy
 
