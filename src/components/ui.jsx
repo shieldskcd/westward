@@ -1,6 +1,24 @@
 import React from "react";
 import { C, serif, mono, LANDMARKS, GOAL, currentLandmarkIdx } from "../game/engine.js";
 
+// Stage art lives in public/stages/ (copied verbatim into dist/stages on build).
+// import.meta.env.BASE_URL respects the relative `base`, so these resolve both
+// on the dev server and on the deployed subdomain. (Kept out of engine.js so the
+// Node test runner never touches import.meta.)
+const STAGE_DIR = import.meta.env.BASE_URL + "stages/";
+export const stage = (name) => `${STAGE_DIR}${name}.png`;
+
+// A framed scene banner. `name` is the file stem in public/stages (no extension).
+export function Scene({ name, alt, height = 190 }) {
+  return (
+    <div style={{ width: "100%", height, marginBottom: 14, overflow: "hidden",
+      border: `2px solid ${C.ink}`, background: C.panel, boxShadow: "3px 3px 0 rgba(44,35,24,.25)" }}>
+      <img src={stage(name)} alt={alt} loading="lazy"
+        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+    </div>
+  );
+}
+
 export function Stat({ label, value, accent }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "4px 8px", minWidth: 66 }}>

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { C, serif, mono, GOAL, DEFAULT_OUTFIT } from "../game/engine.js";
-import { Btn } from "./ui.jsx";
+import { Btn, Scene } from "./ui.jsx";
 
 const rowBottom = { borderBottom: `1px dashed ${C.line}` };
 const between = { display: "flex", alignItems: "center", justifyContent: "space-between" };
@@ -31,6 +31,7 @@ export function Outfit({ dispatch }) {
 
   return (
     <div>
+      <Scene name="01_DepartIndependence" alt="Departing Independence, Missouri" />
       <p style={{ ...serif, color: C.inkSoft, fontSize: 14, marginBottom: 12 }}>
         You've saved $900 and spent $200 on a wagon. Outfit your party with the remaining <b>$700</b>.
         Spend it all now, or hold cash back for the forts — where everything costs more.
@@ -70,6 +71,7 @@ export function Fort({ state, dispatch }) {
   );
   return (
     <div>
+      <Scene name="04_FortSupply" alt="A frontier trading post" />
       <h3 style={{ ...serif, fontSize: 20, color: C.rust }}>Trading Post</h3>
       <p style={{ ...mono, fontSize: 11, color: C.inkSoft, marginBottom: 8 }}>Every dollar buys only 2/3 its worth out here.</p>
       <Row label="Food" val={f} set={setF} note="+2/3 value" />
@@ -107,6 +109,7 @@ export function Hunt({ dispatch }) {
   };
   return (
     <div style={{ textAlign: "center", padding: "24px 0" }}>
+      <Scene name="05_Hunting" alt="Hunting on the plains" />
       <h3 style={{ ...serif, fontSize: 20, color: C.rust }}>Hunting</h3>
       <p style={{ ...mono, fontSize: 12, color: C.inkSoft, marginBottom: 16 }}>When the word appears, fire as fast as you can.</p>
       <div style={{ ...serif, fontSize: 40, color: ready ? C.sage : C.line, height: 56 }}>{word || "…"}</div>
@@ -120,6 +123,7 @@ export function Hunt({ dispatch }) {
 export function River({ state, dispatch }) {
   return (
     <div style={{ padding: "16px 0" }}>
+      <Scene name="06_RiverCrossing" alt={`Crossing the ${state.pendingRiver.name}`} />
       <h3 style={{ ...serif, fontSize: 20, color: C.rust }}>The {state.pendingRiver.name}</h3>
       <p style={{ ...mono, fontSize: 12, color: C.inkSoft, marginBottom: 12 }}>The water runs fast and cold. How do you cross?</p>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -134,6 +138,7 @@ export function River({ state, dispatch }) {
 export function Mountain({ state, dispatch }) {
   return (
     <div style={{ padding: "16px 0" }}>
+      <Scene name="07_MountainBlizzard" alt={`${state.pendingMountain.name} — a hard pass`} />
       <h3 style={{ ...serif, fontSize: 20, color: C.rust }}>{state.pendingMountain.name}</h3>
       <p style={{ ...mono, fontSize: 12, color: C.inkSoft, marginBottom: 12 }}>
         The trail climbs into the mountains. Snow threatens the passes, and there's no way around.
@@ -146,6 +151,11 @@ export function Mountain({ state, dispatch }) {
 export function EndScreen({ state, dispatch }) {
   return (
     <div style={{ textAlign: "center", padding: "32px 0" }}>
+      <Scene
+        name={state.won ? "09_ArrivalAtOregon" : "10_TrailMarker"}
+        alt={state.won ? "Arrival in the Willamette Valley" : "The journey ends"}
+        height={220}
+      />
       <h2 style={{ ...serif, fontSize: 30, color: state.won ? C.sage : C.rust }}>
         {state.won ? "You reached Oregon City!" : "You did not survive the trail."}
       </h2>

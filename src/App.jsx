@@ -3,8 +3,17 @@ import {
   reducer, initState, saveGame, hasSave,
   C, serif, mono, LANDMARKS, currentLandmarkIdx,
 } from "./game/engine.js";
-import { Stat, Btn, TrailBar } from "./components/ui.jsx";
+import { Stat, Btn, TrailBar, Scene } from "./components/ui.jsx";
 import { Outfit, Fort, Hunt, River, Mountain, EndScreen } from "./components/screens.jsx";
+
+// Which scene art to show on the open trail, based on where the party is.
+const DUSK_STOPS = new Set(["Independence Rock", "Soda Springs", "The Dalles"]);
+function trailScene(idx) {
+  const name = LANDMARKS[idx] && LANDMARKS[idx].name;
+  if (name === "Chimney Rock") return "03_ChimneyRock";
+  if (DUSK_STOPS.has(name)) return "08_CampAtDusk";
+  return "02_Primary_Screen";
+}
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, undefined, initState);
@@ -65,6 +74,7 @@ export default function App() {
 
           {s.phase === "trail" && (
             <div>
+              <Scene name={trailScene(idx)} alt={LANDMARKS[idx].name} />
               {resumed && <p style={{ ...mono, fontSize: 10, color: C.inkSoft, marginTop: 0 }}>— journey resumed —</p>}
 
               {/* rations */}
