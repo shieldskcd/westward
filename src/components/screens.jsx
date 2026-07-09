@@ -154,7 +154,6 @@ export function EndScreen({ state, dispatch }) {
       <Scene
         name={state.won ? "09_ArrivalAtOregon" : "10_TrailMarker"}
         alt={state.won ? "Arrival in the Willamette Valley" : "The journey ends"}
-        height={220}
       />
       <h2 style={{ ...serif, fontSize: 30, color: state.won ? C.sage : C.rust }}>
         {state.won ? "You reached Oregon City!" : "You did not survive the trail."}

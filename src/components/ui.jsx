@@ -9,12 +9,15 @@ const STAGE_DIR = import.meta.env.BASE_URL + "stages/";
 export const stage = (name) => `${STAGE_DIR}${name}.png`;
 
 // A framed scene banner. `name` is the file stem in public/stages (no extension).
-export function Scene({ name, alt, height = 190 }) {
+// Art is a uniform 1536×1024 (3:2); we show the whole image at its natural aspect
+// ratio (no crop). aspect-ratio reserves the space so there's no layout shift as
+// it loads. Wider panels just scale it up; it never squishes.
+export function Scene({ name, alt }) {
   return (
-    <div style={{ width: "100%", height, marginBottom: 14, overflow: "hidden",
+    <div style={{ width: "100%", marginBottom: 14, lineHeight: 0, overflow: "hidden",
       border: `2px solid ${C.ink}`, background: C.panel, boxShadow: "3px 3px 0 rgba(44,35,24,.25)" }}>
       <img src={stage(name)} alt={alt} loading="lazy"
-        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        style={{ width: "100%", height: "auto", aspectRatio: "3 / 2", objectFit: "cover", display: "block" }} />
     </div>
   );
 }
