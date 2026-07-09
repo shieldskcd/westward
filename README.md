@@ -1,4 +1,4 @@
-# Trail West
+# Westward
 
 A wagon-journey game built in React + Vite. The **mechanics** are a clean-room port of
 the public-domain 1978 *OREGON* source (published by Don Rawitsch in *Creative Computing*,
@@ -30,7 +30,7 @@ npm run preview    # preview the production build
 
 ## Save / resume
 
-Progress is saved to `localStorage` on every turn (key `trailwest.save.v1`). The outfitting
+Progress is saved to `localStorage` on every turn (key `westward.save.v1`). The outfitting
 screen shows a **Resume** button when a save exists. Reaching the end (win or death) clears it.
 Persistence is wrapped in try/catch so it degrades silently in sandboxed previews.
 

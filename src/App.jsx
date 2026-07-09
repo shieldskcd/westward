@@ -25,7 +25,7 @@ export default function App() {
       <div style={{ width: "100%", maxWidth: 640, background: C.paper, border: `2px solid ${C.ink}`, boxShadow: "6px 6px 0 rgba(44,35,24,.35)" }}>
         {/* header */}
         <div style={{ padding: "16px 20px 12px", borderBottom: `2px solid ${C.ink}`, background: C.panel }}>
-          <h1 style={{ ...serif, fontSize: 26, letterSpacing: 2, color: C.ink, textTransform: "uppercase", margin: 0 }}>Trail West</h1>
+          <h1 style={{ ...serif, fontSize: 26, letterSpacing: 2, color: C.ink, textTransform: "uppercase", margin: 0 }}>Westward</h1>
           <p style={{ ...mono, fontSize: 10, color: C.inkSoft, letterSpacing: 1, margin: "2px 0 0" }}>a wagon journey · 1847 · public-domain mechanics</p>
         </div>
 

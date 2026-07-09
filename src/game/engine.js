@@ -1,5 +1,5 @@
 /*
-  engine.js — all game logic for Trail West
+  engine.js — all game logic for Westward
   Mechanics adapted from the public-domain 1978 OREGON source
   (github.com/LiquidFox1776/oregon-trail-1978-basic, MIT).
   Pure functions + a reducer; no React in here so it's easy to test/tweak.
@@ -122,7 +122,7 @@ export function resolveMountain(d, blizzardProb) {
 }
 
 // ---------- persistence (safe no-ops in sandboxed/artifact contexts) ----------
-const SAVE_KEY = "trailwest.save.v1";
+const SAVE_KEY = "westward.save.v1";
 export function saveGame(state) {
   try { window.localStorage.setItem(SAVE_KEY, JSON.stringify(state)); } catch (_) {}
 }
