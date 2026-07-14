@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { C, serif, mono, GOAL, DEFAULT_OUTFIT } from "../game/engine.js";
+import { C, serif, mono, GOAL, DEFAULT_OUTFIT, LANDMARKS, currentLandmarkIdx } from "../game/engine.js";
 import { Btn, Scene } from "./ui.jsx";
 
 const rowBottom = { borderBottom: `1px dashed ${C.line}` };
@@ -148,21 +148,57 @@ export function Mountain({ state, dispatch }) {
   );
 }
 
+// A carved trailside grave marker: R.I.P., the epitaph, the year, and how far the
+// party got before the trail took them. Built to slot a party member's NAME in later
+// (Phase 2c) — for now it marks the whole party's resting place.
+function Tombstone({ epitaph, mile }) {
+  const near = LANDMARKS[currentLandmarkIdx(mile)].name;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", margin: "18px 0 6px" }}>
+      <div
+        style={{
+          width: 268, maxWidth: "82%", padding: "30px 24px 34px",
+          borderRadius: "134px 134px 12px 12px",
+          background: "linear-gradient(#cabfa2, #a89d80)",
+          border: `2px solid ${C.ink}`,
+          boxShadow: "3px 4px 0 rgba(44,35,24,.3), inset 0 3px 7px rgba(255,255,255,.28)",
+          textAlign: "center", color: C.ink,
+        }}
+      >
+        <div style={{ ...serif, fontSize: 22, letterSpacing: 6, fontWeight: 700, opacity: 0.78 }}>R·I·P</div>
+        <div style={{ fontSize: 20, margin: "0 0 14px", opacity: 0.5 }}>†</div>
+        <div style={{ ...serif, fontSize: 14.5, lineHeight: 1.5, fontStyle: "italic" }}>{epitaph}</div>
+        <div style={{ width: 44, height: 1, background: C.ink, opacity: 0.3, margin: "16px auto" }} />
+        <div style={{ ...mono, fontSize: 12, letterSpacing: 1 }}>1847</div>
+        <div style={{ ...mono, fontSize: 12, letterSpacing: 1, marginTop: 2 }}>
+          {mile.toLocaleString()} miles from home
+        </div>
+        <div style={{ ...mono, fontSize: 10, color: C.inkSoft, marginTop: 6 }}>near {near}</div>
+      </div>
+      {/* the grassy mound the marker is planted in */}
+      <div style={{ width: 220, maxWidth: "70%", height: 20, background: C.sage, borderRadius: "50%", marginTop: -9, opacity: 0.7 }} />
+    </div>
+  );
+}
+
 export function EndScreen({ state, dispatch }) {
+  const won = state.won;
   return (
     <div style={{ textAlign: "center", padding: "32px 0" }}>
       <Scene
-        name={state.won ? "09_ArrivalAtOregon" : "10_TrailMarker"}
-        alt={state.won ? "Arrival in the Willamette Valley" : "The journey ends"}
+        name={won ? "09_ArrivalAtOregon" : "10_TrailMarker"}
+        alt={won ? "Arrival in the Willamette Valley" : "A lonely trailside grave"}
       />
-      <h2 style={{ ...serif, fontSize: 30, color: state.won ? C.sage : C.rust }}>
-        {state.won ? "You reached Oregon City!" : "You did not survive the trail."}
+      <h2 style={{ ...serif, fontSize: 30, color: won ? C.sage : C.rust }}>
+        {won ? "You reached Oregon City!" : "The trail has claimed your party."}
       </h2>
-      <p style={{ ...serif, fontSize: 16, color: C.ink, marginTop: 10 }}>
-        {state.won
-          ? `After ${GOAL} long miles and ${state.turn} turns, your party arrives in the Willamette Valley. A real pioneer.`
-          : state.dead}
-      </p>
+      {won ? (
+        <p style={{ ...serif, fontSize: 16, color: C.ink, marginTop: 10 }}>
+          {`After ${GOAL} long miles and ${state.turn} turns, your party arrives in the Willamette Valley. A real pioneer.`}
+        </p>
+      ) : (
+        <Tombstone epitaph={state.dead} mile={state.mile} />
+      )}
       <div style={{ marginTop: 24 }}>
         <Btn tone="go" onClick={() => dispatch({ type: "RESTART" })}>Set out again</Btn>
       </div>
