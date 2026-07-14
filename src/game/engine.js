@@ -54,32 +54,48 @@ export function currentLandmarkIdx(mile) {
 }
 
 // ---------- event table: exact cumulative d100 cutoffs from the 1978 source ----------
+// Each row is `{ cutoff, apply }`. rollEvent draws one d100 and returns the FIRST row
+// whose `cutoff` the roll is <= (first-match-wins), so a row's real probability is
+// `cutoff − previous cutoff`. The cutoffs and their ASCENDING order ARE the balance
+// contract (guarded by test/balance.test.mjs) — never reorder rows or "tidy" the
+// numbers into per-event widths. To add an event: insert a row at the right cutoff,
+// widening the gap there on purpose, and keep the list sorted. `apply(d)` mutates the
+// day-state `d` and returns the log `{ msg, tone }`. Rolls above the last cutoff (95)
+// fall through to the else branch in rollEvent.
+export const EVENTS = [
+  { cutoff: 6,  apply: (d) => { d.mile -= 15 + 5 * rnd(); d.misc -= 8; return { msg: "Wagon breaks down — time and supplies lost on repairs.", tone: "bad" }; } },
+  { cutoff: 11, apply: (d) => { d.mile -= 25; d.oxen -= 20; return { msg: "An ox injures its leg — it slows you the rest of the way.", tone: "bad" }; } },
+  { cutoff: 13, apply: (d) => { d.mile -= 5 + 4 * rnd(); d.misc -= 2 + 3 * rnd(); return { msg: "A child breaks an arm. You stop to make a sling.", tone: "bad" }; } },
+  { cutoff: 15, apply: (d) => { d.mile -= 17; return { msg: "An ox wanders off. You lose time searching.", tone: "bad" }; } },
+  { cutoff: 17, apply: (d) => { d.mile -= 10; return { msg: "A child gets lost — half the day is spent looking.", tone: "bad" }; } },
+  { cutoff: 22, apply: (d) => { d.mile -= 10 * rnd() + 2; return { msg: "Unsafe water — you detour to a clean spring.", tone: "bad" }; } },
+  { cutoff: 32, apply: (d) => {
+      // early trail = rain (supplies lost); later on = a harmless cold-weather warning
+      if (d.mile <= 950) { d.food -= 10; d.bullets -= 500; d.misc -= 15; d.mile -= 10 * rnd() + 5; return { msg: "Heavy rains — time and supplies lost.", tone: "bad" }; }
+      return { msg: "Cold weather ahead. Bundle up.", tone: "warn" };
+    } },
+  { cutoff: 35, apply: (d) => { d.bullets -= 40; d.misc -= 5; d.oxen -= 20; return { msg: "Bandits attack! Driven off, but supplies are gone.", tone: "bad" }; } },
+  { cutoff: 37, apply: (d) => { d.food -= 40; d.bullets -= 400; d.misc -= rnd() * 8 + 3; d.mile -= 15; return { msg: "Fire in the wagon — food and supplies damaged!", tone: "bad" }; } },
+  { cutoff: 42, apply: (d) => { d.mile -= 10 + 5 * rnd(); return { msg: "You lose your way in heavy fog.", tone: "bad" }; } },
+  { cutoff: 44, apply: (d) => {
+      d.bullets -= 10; d.misc -= 5;
+      if (d.misc < 0) d.dead = "You died of snakebite — no medicine left.";
+      return { msg: "You killed a poisonous snake after it struck.", tone: "bad" };
+    } },
+  { cutoff: 54, apply: (d) => { d.food -= 30; d.clothing -= 20; d.mile -= 20 + 20 * rnd(); return { msg: "Wagon swamped fording a river — food and clothing lost.", tone: "bad" }; } },
+  { cutoff: 64, apply: (d) => { d.bullets -= 20; d.clothing -= 8; d.food -= 16; return { msg: "Wild animals attack! You fend them off at a cost.", tone: "bad" }; } },
+  { cutoff: 69, apply: (d) => { d.mile -= 5 + rnd() * 10; d.bullets -= 200; d.misc -= 4 + rnd() * 3; return { msg: "Hail storm — supplies damaged.", tone: "bad" }; } },
+  { cutoff: 95, apply: (d) => { d.illnessCheck = true; return { msg: "The trail is quiet today.", tone: "ok" }; } },
+];
+
 export function rollEvent(d) {
   const r = 100 * rnd();
-  const rain = d.mile <= 950;
-  if (r <= 6)  { d.mile -= 15 + 5 * rnd(); d.misc -= 8; return { msg: "Wagon breaks down — time and supplies lost on repairs.", tone: "bad" }; }
-  if (r <= 11) { d.mile -= 25; d.oxen -= 20; return { msg: "An ox injures its leg — it slows you the rest of the way.", tone: "bad" }; }
-  if (r <= 13) { d.mile -= 5 + 4 * rnd(); d.misc -= 2 + 3 * rnd(); return { msg: "A child breaks an arm. You stop to make a sling.", tone: "bad" }; }
-  if (r <= 15) { d.mile -= 17; return { msg: "An ox wanders off. You lose time searching.", tone: "bad" }; }
-  if (r <= 17) { d.mile -= 10; return { msg: "A child gets lost — half the day is spent looking.", tone: "bad" }; }
-  if (r <= 22) { d.mile -= 10 * rnd() + 2; return { msg: "Unsafe water — you detour to a clean spring.", tone: "bad" }; }
-  if (r <= 32) {
-    if (rain) { d.food -= 10; d.bullets -= 500; d.misc -= 15; d.mile -= 10 * rnd() + 5; return { msg: "Heavy rains — time and supplies lost.", tone: "bad" }; }
-    return { msg: "Cold weather ahead. Bundle up.", tone: "warn" };
+  for (const ev of EVENTS) {
+    if (r <= ev.cutoff) return ev.apply(d);
   }
-  if (r <= 35) { d.bullets -= 40; d.misc -= 5; d.oxen -= 20; return { msg: "Bandits attack! Driven off, but supplies are gone.", tone: "bad" }; }
-  if (r <= 37) { d.food -= 40; d.bullets -= 400; d.misc -= rnd() * 8 + 3; d.mile -= 15; return { msg: "Fire in the wagon — food and supplies damaged!", tone: "bad" }; }
-  if (r <= 42) { d.mile -= 10 + 5 * rnd(); return { msg: "You lose your way in heavy fog.", tone: "bad" }; }
-  if (r <= 44) {
-    d.bullets -= 10; d.misc -= 5;
-    if (d.misc < 0) d.dead = "You died of snakebite — no medicine left.";
-    return { msg: "You killed a poisonous snake after it struck.", tone: "bad" };
-  }
-  if (r <= 54) { d.food -= 30; d.clothing -= 20; d.mile -= 20 + 20 * rnd(); return { msg: "Wagon swamped fording a river — food and clothing lost.", tone: "bad" }; }
-  if (r <= 64) { d.bullets -= 20; d.clothing -= 8; d.food -= 16; return { msg: "Wild animals attack! You fend them off at a cost.", tone: "bad" }; }
-  if (r <= 69) { d.mile -= 5 + rnd() * 10; d.bullets -= 200; d.misc -= 4 + rnd() * 3; return { msg: "Hail storm — supplies damaged.", tone: "bad" }; }
-  if (r <= 95) { d.illnessCheck = true; return { msg: "The trail is quiet today.", tone: "ok" }; }
-  d.food += 14; return { msg: "Helpful locals point you to more food.", tone: "good" };
+  // else branch (r > 95): the rare good beat
+  d.food += 14;
+  return { msg: "Helpful locals point you to more food.", tone: "good" };
 }
 
 // ---------- eating -> illness (src 4610-4660 + severity 6300) ----------
