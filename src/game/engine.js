@@ -98,16 +98,38 @@ export function rollEvent(d) {
   return { msg: "Helpful locals point you to more food.", tone: "good" };
 }
 
+// ---------- named afflictions (real trail killers; original epitaph wording) ----------
+// The illness roll draws from this weighted list so a sickness has a NAME in the log and
+// a specific cause of death when the medicine runs out. Diseases are real public-domain
+// names; the epitaph wording is our own — deliberately NOT MECC's verbatim tombstone line.
+// `weight` roughly tracks how common each was on the trail. Adding one = a one-line row.
+export const AFFLICTIONS = [
+  { name: "dysentery",      epitaph: "Dysentery wore them down, and the medicine chest was bare.",        weight: 5 },
+  { name: "cholera",        epitaph: "Cholera swept the camp faster than any remedy could answer.",       weight: 5 },
+  { name: "typhoid fever",  epitaph: "Typhoid fever took hold with no medicine left to fight it.",        weight: 3 },
+  { name: "measles",        epitaph: "Measles ran through the party, and nothing was left to treat it.",  weight: 2 },
+  { name: "mountain fever", epitaph: "Mountain fever burned through them past the last of the medicine.", weight: 2 },
+  { name: "scurvy",         epitaph: "Scurvy set in from the meager trail diet, past any remedy.",        weight: 1 },
+];
+
+function pickAffliction() {
+  const total = AFFLICTIONS.reduce((s, a) => s + a.weight, 0);
+  let r = rnd() * total;
+  for (const a of AFFLICTIONS) { if (r < a.weight) return a; r -= a.weight; }
+  return AFFLICTIONS[0];
+}
+
 // ---------- eating -> illness (src 4610-4660 + severity 6300) ----------
 export function illnessRoll(d, eat) {
   let fire = eat === 1 ? true : eat === 2 ? rnd() > 0.25 : rnd() < 0.5;
   if (!fire) return null;
+  const ill = pickAffliction();
   const sev = 100 * rnd();
-  if (sev < 10 + 35 * (eat - 1)) { d.mile -= 5; d.misc -= 2; return "Mild illness — medicine used."; }
-  if (sev < 100 - 40 / Math.pow(4, eat - 1)) { d.mile -= 5; d.misc -= 5; return "Bad illness — medicine used."; }
+  if (sev < 10 + 35 * (eat - 1)) { d.mile -= 5; d.misc -= 2; return `A mild case of ${ill.name} — medicine used.`; }
+  if (sev < 100 - 40 / Math.pow(4, eat - 1)) { d.mile -= 5; d.misc -= 5; return `A bad bout of ${ill.name} — medicine used.`; }
   d.misc -= 10;
-  if (d.misc < 0) d.dead = "A serious illness took hold and your medicine ran out.";
-  return "Serious illness — you must stop for medical attention.";
+  if (d.misc < 0) d.dead = ill.epitaph;
+  return `A serious case of ${ill.name} — you must stop for medical attention.`;
 }
 
 // ---------- mountain passes (src 4710+; South Pass & Blue Mountains) ----------
