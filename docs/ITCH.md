@@ -80,6 +80,12 @@ already covers the diligence, and the release follows it:
 
 ### Long version (the page body)
 
+Paste-ready HTML in [`itch-description.html`](itch-description.html) — itch's editor
+has an **Edit as HTML** toggle, and that file is written for its sanitizer: structural
+tags only (`p`, `h2`, `ul`, `li`, `strong`, `em`, `hr`), no inline styles, classes or
+ids, which itch strips. The game title is omitted because itch already renders it
+above the description. Markdown below for reading.
+
 > # Westward
 >
 > **2,040 miles. Twenty turns. One wagon, and whatever you thought to buy before you left.**
