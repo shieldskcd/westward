@@ -3,3 +3,10 @@ dist
 .DS_Store
 *.local
 .vite
+
+# PNG art masters (1536x1024). Shipped art is WebP in public/stages/.
+# These are also in git history prior to the itch.io release prep.
+art-src
+
+# Packaged itch.io upload
+westward-itch.zip

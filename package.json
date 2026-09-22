@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "package": "npm run build && rm -f westward-itch.zip && cd dist && zip -r -q ../westward-itch.zip . -x '.*' -x '__MACOSX/*' && cd .. && echo \"packaged westward-itch.zip ($(du -h westward-itch.zip | cut -f1))\"",
     "test": "node --test"
   },
   "dependencies": {

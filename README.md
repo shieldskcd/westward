@@ -17,6 +17,7 @@ npm install
 npm run dev        # local dev server
 npm run build      # production build -> dist/
 npm run preview    # preview the production build
+npm run package    # build + zip dist/ -> westward-itch.zip (itch.io upload)
 npm test           # headless engine regression + balance guardrails
 ```
 
@@ -38,11 +39,14 @@ update the `REC` / `LEAN` reference outfits at the top of the test to match.
 
 ## Deploy
 
-`npm run build` emits a static `dist/`. Host it anywhere static:
+`npm run build` emits a static `dist/` (~1.1 MB). `base` is already `"./"`, so the
+build is path-relative and works from any docroot or subfolder without rewrites.
 
-- **itch.io** — zip `dist/` and upload as an HTML5 project
-- **GitHub Pages** — push `dist/`, or use an action; if serving from a project subpath,
-  uncomment and set `base` in `vite.config.js`
+- **itch.io** — `npm run package` produces `westward-itch.zip` with `index.html` at
+  the zip root, which is what itch requires. Full release kit — store copy, embed
+  settings, AI disclosure, trademark notes, checklist — in [`docs/ITCH.md`](docs/ITCH.md).
+- **GitHub Pages** — push `dist/`, or use an action. The relative `base` already
+  handles project subpaths.
 - **IONOS / your own space** — upload the contents of `dist/`
 
 ## Save / resume
@@ -54,6 +58,11 @@ Persistence is wrapped in try/catch so it degrades silently in sandboxed preview
 ## Structure
 
 ```
+index.html               page shell + favicon/meta
+public/
+  favicon.svg            wagon wheel, game palette
+  stages/*.webp          shipped scene art (1280px wide)
+art-src/                 1536x1024 PNG masters (gitignored, not shipped)
 src/
   main.jsx                 mount
   App.jsx                  root UI + save/resume wiring + turn/action buttons

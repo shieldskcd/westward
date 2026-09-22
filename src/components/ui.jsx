@@ -5,13 +5,17 @@ import { C, serif, mono, LANDMARKS, GOAL, currentLandmarkIdx } from "../game/eng
 // import.meta.env.BASE_URL respects the relative `base`, so these resolve both
 // on the dev server and on the deployed subdomain. (Kept out of engine.js so the
 // Node test runner never touches import.meta.)
+//
+// Shipped as WebP at 1280px wide — the panel never exceeds 640px, so this is
+// still 2x for retina. The 1536x1024 PNG masters are in art-src/ (gitignored;
+// also recoverable from git history before the itch.io release prep).
 const STAGE_DIR = import.meta.env.BASE_URL + "stages/";
-export const stage = (name) => `${STAGE_DIR}${name}.png`;
+export const stage = (name) => `${STAGE_DIR}${name}.webp`;
 
 // A framed scene banner. `name` is the file stem in public/stages (no extension).
-// Art is a uniform 1536×1024 (3:2); we show the whole image at its natural aspect
-// ratio (no crop). aspect-ratio reserves the space so there's no layout shift as
-// it loads. Wider panels just scale it up; it never squishes.
+// Art is a uniform 3:2; we show the whole image at its natural aspect ratio (no
+// crop). aspect-ratio reserves the space so there's no layout shift as it loads.
+// Wider panels just scale it up; it never squishes.
 export function Scene({ name, alt }) {
   return (
     <div style={{ width: "100%", marginBottom: 14, lineHeight: 0, overflow: "hidden",

@@ -2,8 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- itch.io serves HTML games in a fixed-size iframe. viewport-fit and the
+         no-user-scalable default are deliberately NOT set: the layout is fluid,
+         and pinch-zoom should stay available for players who want it. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Westward</title>
+    <title>Westward — a wagon journey</title>
+    <meta name="description" content="A wagon-journey survival game. Outfit in Independence, ration your food, ford the rivers, and get your party to Oregon before winter. Public-domain mechanics adapted from the 1978 OREGON source." />
+    <meta name="theme-color" content="#cdb58a" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Westward — a wagon journey" />
+    <meta property="og:description" content="Outfit your wagon, ration your food, ford the rivers, and reach Oregon before winter closes the passes." />
+    <meta property="og:image" content="./stages/01_DepartIndependence.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <div id="root"></div>
