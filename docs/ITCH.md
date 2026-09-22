@@ -120,6 +120,7 @@ above the description. Markdown below for reading.
 > This is a modern rebuild of the trail game I grew up on — built from the
 > **designer's original 1978 BASIC source**, published by Don Rawitsch in
 > *Creative Computing* and long since in the public domain.
+> [The listing is on GitHub](https://github.com/LiquidFox1776/oregon-trail-1978-basic) if you want to see what I started from.
 >
 > The mechanics are a hand port: the same d100 event bands, the same food-and-illness
 > economy, the same brutal arithmetic. What's new is a landmark spine along the real
