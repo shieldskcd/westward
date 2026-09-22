@@ -148,27 +148,11 @@ All in [`press/`](../press), ready to upload.
 | `02-river-crossing.png` | 650×939 | The Big Blue River decision — shows the branching. |
 | `03-chimney-rock.png` | 648×942 | Trail view with landmark bar, rations, and the event log. |
 | `04-arrival.png` | 641×937 | The win screen at Oregon City. |
-| `05-tombstone.png` | 642×987 | The carved epitaph death screen. ⚠️ **Needs retaking — see below.** |
+| `05-tombstone.png` | 641×1068 | Death by typhoid at Fort Bridger, 1,009 miles in — the carved epitaph. |
 
 Suggested screenshot order on the page: **02 → 05 → 03 → 01 → 04**. Lead with a
 decision, follow it immediately with the consequence, then the texture, then the
 shop, and let the arrival land last.
-
-### ⚠️ `05-tombstone.png` must be retaken
-
-It was captured before the mileage fix, so it shows the bug: `192.59313743969065 / 2040 mi`
-in the trail bar, and `192.593 miles from home` carved on the stone. Both render as clean
-integers now. Retake it against a current build before uploading.
-
-Two things worth getting on the retake:
-
-- **Die further along.** The current shot is turn 1/20 with $458 unspent, which reads as
-  "bought nothing, starved immediately" rather than as a journey that went wrong. A death
-  around turn 8–12 sells the game better.
-- **Die of something named.** "You ran out of food and starved" is the generic ending.
-  The affliction epitaphs — *"Dysentery wore them down, and the medicine chest was bare"* —
-  are the most distinctive writing in the game. Outfit with low `misc` (medicine) and eat
-  poorly to draw one.
 
 ## Release checklist
 
@@ -179,7 +163,6 @@ Two things worth getting on the retake:
 - [ ] Set viewport 800×900, enable fullscreen + mobile friendly
 - [ ] Set background color `#cdb58a`
 - [ ] **Answer the AI disclosure prompt** (see above — this is required)
-- [ ] **Retake `05-tombstone.png`** against the fixed build (see above)
 - [ ] Upload cover image + screenshots from `press/`
 - [ ] Paste tagline, description, tags, metadata
 - [ ] Save as **draft** and play the embedded build start to finish before going public
