@@ -228,7 +228,10 @@ export function reducer(state, a) {
         { t: ev.msg, tone: ev.tone },
       ];
       if (d.illnessCheck) { const ill = illnessRoll(d, d.eat); if (ill) logs.push({ t: ill, tone: "bad" }); }
-      ["food", "bullets", "clothing", "misc", "oxen"].forEach((k) => (d[k] = clamp0(ri(d[k]))));
+      // `mile` belongs here too: ADVANCE floors it, but the EVENTS handlers run
+      // after that and subtract fractions (e.g. `d.mile -= 15 + 5 * rnd()`), so
+      // without this the raw float reaches the trail bar as "209.65230620937945".
+      ["food", "bullets", "clothing", "misc", "oxen", "mile"].forEach((k) => (d[k] = clamp0(ri(d[k]))));
       d.log = [...logs.reverse(), ...state.log].slice(0, 40);
 
       // special-landmark beats: mountain takes precedence over river within a turn
